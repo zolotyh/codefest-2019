@@ -1,0 +1,698 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Деревотряска</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/wrike.css">
+    <link rel="stylesheet" href="style.css" media="all">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+      var link = document.createElement( 'link' );
+      link.rel = 'stylesheet';
+      link.type = 'text/css';
+      link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+      document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+    <style>
+      .reveal .solid {
+        width: 2ex;
+        display:inline-block;
+        text-align:center;
+        font-weight: 400;
+      }
+      .reveal .left-right {
+          display: flex;
+      }
+      .reveal .left-right > * {
+          width: 50%;
+          margin: 1em;
+      }
+      .reveal .red {
+          color: #E9530E;
+      }
+      .reveal li {
+        margin-bottom: .5em;
+      }
+      .reveal pre.opacity * {
+        color: rgba(255,255,255, 0.3) !important;
+      }
+      .reveal .tag {
+        width: 12ex;
+        display:inline-block;
+        float: left;
+        font-weight:500;
+      }
+
+      .reveal pre.opacity mark,
+      .reveal pre.opacity mark * {
+        color: rgba(255,255,255, 1) !important;
+        background-color:transparent;
+      }
+
+      .reveal mark,
+      .reveal mark * {
+        color: #fff;
+        font-weight: 600;
+        background-color: #000;
+      }
+
+      .reveal ul.solid-ul li {
+        list-style:none;
+      }
+
+      .hidden {
+        visibility:hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+          <section>
+              <h3>
+              Сжимаем Javascript по-взрослому
+              </h3>
+              <p>Алексей Золотых</p>
+          </section>
+          <section>
+              <img src="img/infobip.svg" width=80% alt="">
+          </section>
+          <section>
+              <img src="img/holy.svg" width=70% alt="">
+          </section>
+          <section>
+              <h3>
+              Сжимаем Javascript по-взрослому
+              </h3>
+          </section>
+          <section>
+              <h3>
+              – Зачем?
+              </h3>
+              <h3 class="fragment">– Быстродействие!</h3>
+          </section>
+          <section data-transition="slide none">
+              <h3>Экономия</h3>
+          </section>
+          <section data-transition="none">
+              <p>Экономия</p>
+              <ul>
+                  <li class="fragment">Время на сеть</li>
+                  <li class="fragment">Процессор</li>
+                  <li class="fragment">Память</li>
+              </ul>
+          </section>
+          <section data-background="img/spi4ki.png"></section>
+          <section>
+              Пример 1
+          </section>
+          <section>
+              <p>5mb</p>
+              <pre><code data-trim>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt; &lt;/head&gt;
+&lt;body&gt;
+  &lt;script src=&quot;./index.js&quot;&gt;&lt;/script&gt;    &lt;!--5 megabytes--&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+              </code></pre>
+          </section>
+          <section>
+              <p>Network — 100ms</p>
+              <img src="img/network_.png" alt="">
+          </section>
+          <section>
+              <p>Parse — 300ms</p>
+              <img src="img/parse.png" alt="">
+          </section>
+          <section>
+              <p>
+                Evaluate — 500ms
+              </p>
+              <img src="img/evaluate.png" alt="">
+          </section>
+          <section>
+              Пример 2
+          </section>
+          <section>
+              <pre><code data-trim>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;script src=&quot;https://CDN/lodash.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+              </code></pre>
+              <p class="fragment">memory 32mb</p>
+          </section>
+          <section>
+              1000 раз
+              <pre><code data-trim>
+    &lt;script src=&quot;https://CDN/lodash.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://CDN/lodash.js&quot;&gt;&lt;/script&gt;
+    ...
+    &lt;script src=&quot;https://CDN/lodash.js&quot;&gt;&lt;/script&gt;
+              </code></pre>
+              <p class="fragment">memory 300mb</p>
+          </section>
+          <section>
+              <img src="img/chrome.png" alt="">
+          </section>
+          <section>
+              <img src="img/chrome2.png" alt="">
+          </section>
+          <section>
+              <h3>Как?</h3>
+              <ul>
+                  <li class="fragment">Потоковое сжатие</li>
+                  <li class="fragment">Сжатие на основе AST</li>
+              </ul>
+          </section>
+          <section>
+              <h3>Потоковое сжатие</h3>
+              <p class="fragment">на уровне сервера</p>
+          </section>
+          <section>
+              <p>npx create-react-app my-app</p>
+              <img src="img/react.png" alt="">
+          </section>
+          <section>
+              Без кэша + Slow 3G
+          </section>
+          <section>
+              <table>
+                  <tr>
+                      <th>Размер</th>
+                      <td>120k</td>
+                  </tr>
+                  <tr>
+                      <th>Время всего запроса</th>
+                      <td>4 сек</td>
+                  </tr>
+              </table>
+              <img src="img/devtools1.png" alt="">
+          </section>
+          <section>
+              <table>
+                  <tr>
+                      <th>Ожидание</th>
+                      <td>2 сек</td>
+                  </tr>
+                  <tr>
+                      <th>Загрузка</th>
+                      <td>2 сек</td>
+                  </tr>
+              </table>
+              <img src="img/devtools2.png" alt="">
+          </section>
+          <section>
+              <ul>
+                  <li >gzip<sup>1</sup><b class="fragment">&mdash; 50&ndash;90% 🥩</b></li>
+                  <li class="fragment">gzip<sup>9</sup>
+                      <b class="fragment">
+                          &mdash; 15&ndash;45% от gzip<sup>1</sup>
+                      </b>
+                  </li>
+                  <li class="fragment">zopfli <b class="fragment">&mdash; 4&ndash;7% от gzip<sup>9</sup> </b></li>
+                  <li class="fragment">brotli<sup>11</sup>
+                      <b class="fragment">&mdash; 8&ndash;65% от zopfli </b></li>
+              </ul>
+          </section>
+          <section>
+              <table>
+                  <tr>
+                      <td></td>
+                      <th>Размер</th>
+                      <th>Время</th>
+                  </tr>
+                  <tr>
+                      <th>Было</th>
+                      <td>120</td>
+                      <td>4</td>
+                  </tr>
+                  <tr class="fragment">
+                      <th>Стало</th>
+                      <td>40</td>
+                      <td>2,7</td>
+                  </tr>
+              </table>
+          </section>
+          <section>
+              <h2>30% быстрее загрузка страницы
+                  <sup class="fragment" data-fragment-index=1>*</sup>
+              </h2>
+              <p class="fragment" data-fragment-index=1>
+                <i>
+                    <sup >*</sup> для медленных сетей и быстрых устройств</p>
+                </i>
+          </section>
+          <section>
+              <img src="img/brotli.png" width=100% alt="">
+          </section>
+          <section>
+              <p>
+              <img src="img/nginx.svg" style="height: 1em" alt="">
+              </p>
+              <pre><code style="font-size: 1em" data-trim data-noescape>
+    ...
+    gzip on;
+    gzip_static on;
+    gzip_vary on;
+    gzip_types ...
+    brotli on;
+    brotli_comp_level 4;
+    brotli_static on;
+    brotli_types ...
+    ...
+              </code></pre>
+          </section>
+          <section>
+              <h3>Опыт LinkedIn</h3>
+              <p>
+                  <a target="_blank" href="https://engineering.linkedin.com/blog/2017/05/boosting-site-speed-using-brotli-compression">http://bit.do/brotli</a>
+              </p>
+              <img src="img/chart2.png" style="height: 5em" alt="">
+          </section>
+          <section>
+              <h3>Gist с описанием</h3>
+              <p>
+                  <a target="_blank" href="https://gist.github.com/Defite/1a6bdead2a084e416670268dc875bd95">http://bit.do/jsgzip</a>
+              </p>
+              <img src="img/chart.png" style="height: 5em" alt="">
+          </section>
+          <section>
+              <p>Итого:</p>
+              <ul>
+                  <li class="fragment">Просто</li>
+                  <li class="fragment">Для сети</li>
+                  <li class="fragment">Не работает для маленьких файлов</li>
+                  <li class="fragment">Почти всегда стоит включить</li>
+
+              </ul>
+          </section>
+          <section>
+              <img src="img/halyava.jpeg" alt="">
+          </section>
+          <section>
+              <blockquote>
+              «Для js файлов на фоне космического коэффициента сжатия brotli считаю ненужным минификацию»
+              </blockquote>
+          </section>
+          <section>
+              <pre><code data-trim>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;script src=&quot;https://CDN/lodash.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+              </code></pre>
+          </section>
+          <section>
+              <img src="img/lodash5.png" alt="">
+          </section>
+          <section data-transition="slide none">
+              <p>lodash.js</p>
+              <table>
+                  <tr>
+                      <th>По сети</th>
+                      <th>В браузере</th>
+                  </tr>
+                  <tr>
+                      <td>87k</td>
+                      <td>527k</td>
+                  </tr>
+              </table>
+          </section>
+          <section>
+              <p>Можно уменьшить еще?</p>
+          </section>
+          <section>
+              UglifyJS
+              <p class="fragment">используется в lodash</p>
+          </section>
+          <section>
+              <pre><code data-trim>
+uglifyjs lodash.js &gt; lodash.min.js
+              </code></pre>
+          </section>
+          <section>
+              <ul>
+                  <li>Убрали пробелы</li>
+                  <li>Убрали комменты</li>
+              </ul>
+          </section>
+          <section>
+              Протянули константы
+              <pre><code data-trim>
+(function() {
+  const a = 1;
+  const b = 2;
+  console.log(a + b);
+}());
+              </code></pre>
+              <br>
+              <pre class=fragment><code data-trim>
+console.log(3);
+              </code></pre>
+          </section>
+          <section>
+              <pre><code data-trim>
+if(1 * 5){
+ console.log(1)
+}
+              </code></pre>
+              <br>
+              <pre class=fragment><code data-trim>
+console.log(1);
+              </code></pre>
+          </section>
+          <section>
+              arrows,
+              booleans,
+              collapse_vars,
+              comparisons,
+              computed_props,
+              conditionals,
+              dead_code,
+              drop_console,
+              drop_debugger,
+              ecma,
+              evaluate,
+              expression,
+              global_defs,
+              hoist_funs,
+              hoist_props,
+              hoist_vars,
+              ie8,
+              if_return,
+              inline,
+              join_vars,
+              keep_classnames,
+              keep_fargs,
+              keep_fnames,
+              keep_infinity,
+              loops,
+              negate_iife,
+              passes,
+              properties,
+              pure_getters,
+              pure_funcs,
+              reduce_funcs,
+              reduce_vars,
+              sequences,
+              side_effects,
+              switches,
+              top_retain,
+              toplevel,
+              typeofs,
+              unsafe,
+              unsafe_arrows,
+              unsafe_comps,
+              unsafe_Function,
+              unsafe_math,
+              unsafe_methods,
+              unsafe_proto,
+              unsafe_regexp,
+              unsafe_undefined,
+              unused,
+              warnings,
+          </section>
+          <section>
+              <table>
+                  <tr>
+                      <th>По сети</th>
+                      <th>В браузере</th>
+                  </tr>
+                  <tr>
+                      <td>35k</td>
+                      <td>144k</td>
+                  </tr>
+              </table>
+          </section>
+          <section>
+              Ещё?
+          </section>
+          <section>
+              <pre><code data-trim data-noescape>
+uglifyjs lodash.js <mark>--mangle</mark> &gt; lodash.min.js
+              </code></pre>
+          </section>
+          <section>
+                  <pre><code data-trim>
+function lognLongLongName(mySuperArgs){
+  return mySuperArgs[0];
+}
+                  </code></pre>
+                  <br>
+                  <pre class="fragment"><code data-trim>
+function n(i){
+  return i[0];
+}
+
+                  </code></pre>
+                  <br>
+
+                  <small class=fragment>
+                  <sup>*</sup> кроме функций верхнего уровня
+                  </small>
+          </section>
+          <section data-transition="none slide">
+              <table>
+                  <tr>
+                      <th>По сети</th>
+                      <th>В браузере</th>
+                  </tr>
+                  <tr>
+                      <td>23k</td>
+                      <td>72k</td>
+                  </tr>
+              </table>
+          </section>
+          <section>
+              <pre><code data-trim>
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;script src=&quot;https://CDN/lodash.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+              </code></pre>
+              <p class="fragment">memory 32mb</p>
+          </section>
+          <section>
+              Мы нечасто загружаем библиотеки из HTML
+          </section>
+          <section data-transition="slide none">
+              <pre><code data-trim data-noescape>
+import * as _ from 'lodash'
+
+<span class="fragment">if (_.has([1, 2, 3], 2)) {
+  console.log("debug");
+}
+</span>
+              </code></pre>
+              <p class="fragment">
+               от 23к до 576к
+              </p>
+          </section>
+          <section data-transition="none slide">
+              <pre><code data-trim data-noescape>
+import * as _ from 'lodash/<mark>has</mark>'
+
+if (_.has([1, 2, 3], 2)) {
+  console.log("debug");
+}
+              </code></pre>
+              <p>
+               от 3к до 10к
+              </p>
+          </section>
+          <section>
+              <h2>
+                  Import Cost
+              </h2>
+              <table>
+                  <tr>
+                      <th>JetBrains</th>
+                      <td>
+                          <a href="https://plugins.jetbrains.com/plugin/9970-import-cost">bit.do/jcost</a>
+                      </td>
+                  </tr>
+                  <tr>
+                      <th>
+                          VSCode
+                      </th>
+                      <td>
+                          <a href="https://marketplace.visualstudio.com/items?itemName=wix.vscode-import-cost">bit.do/vcost</a>
+                      </td>
+                  </tr>
+              </table>
+          </section>
+          <section>
+              <img src="img/import-cost.gif" width=100% alt="">
+          </section>
+          <section data-transition="none slide">
+              <p>
+              Как это скомпилит UglifyJS?
+              </p>
+              <pre><code data-trim data-noescape>
+import * as _ from 'lodash/<mark>has</mark>'
+
+if (_.has([1, 2, 3], 2)) {
+  console.log("debug");
+}
+              </code></pre>
+          </section>
+          <section>
+              <pre><code data-trim>
+import * as _ from 'lodash/has'
+            ^
+ERROR: Unexpected token: name
+�_�, expected: punc �;�
+              </code></pre>
+          </section>
+          <section>
+              <strike>UglifyJS</strike>
+          </section>
+          <section>
+              <p>Terser</p>
+              <a href="https://github.com/terser-js/terser">github.com/terser-js/terser</a>
+          </section>
+          <section>
+              Что можно еще улучшить?
+          </section>
+          <section>
+              Treeshaking
+          </section>
+          <section data-background="img/tree.jpg"></section>
+          <section>
+              <p>module.js</p>
+              <pre><code data-trim>
+export function square(x) {
+  return x * x;
+}
+
+export function cube(x) {
+  return x * x * x;
+}
+              </code></pre>
+          </section>
+          <section>
+              <p>index.js</p>
+              <pre>
+                <code data-trim>
+import {cube} from './module'
+
+console.log(cube(x))
+                </code>
+              </pre>
+          </section>
+          <section>
+!function(e){var r={};function t(n){if(r[n])return r[n].exports;var o=r[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,t),o.l=!0,o.exports}t.m=e,t.c=r,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:n})},t.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},t.p="",t(t.s=0)}([function(e,r,t){"use strict";t.r(r);var n;console.log((n=3)*n*n)}]);
+          </section>
+          <section>
+              <p>module.js</p>
+              <pre><code data-trim>
+export function square(x) {
+  return x * x;
+}
+
+export function cube(x) {
+  return square(x) * x
+}
+              </code></pre>
+          </section>
+          <section>
+              <p>
+Код на Dart
+              </p>
+              <pre><code data-trim>
+void main() {
+  print(cube(3));
+}
+
+int cube(int x) =&gt; x * x * x;
+int square(int x) =&gt; x * x;
+              </code></pre>
+          </section>
+          <section>
+              <p>
+              Вывод
+              </p>
+              <pre><code>
+...
+    main: function() {
+      H.printString("27");
+    }
+...
+              </code></pre>
+
+
+
+
+          </section>
+          <section>
+              prepack.io
+          </section>
+          <section>
+              <pre><code data-trim>
+(function () {
+  function fibonacci(x) {
+    return x <= 1 ? x : fibonacci(x - 1) + fibonacci(x - 2);
+  }
+  global.x = fibonacci(15);
+})();
+              </code></pre>
+          </section>
+          <section>
+              <pre><code data-trim>
+x = 610;
+              </code></pre>
+          </section>
+          <section>
+              <p>Lodash?</p>
+              <p class="fragment">868k</p>
+          </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+      // More info about config & dependencies:
+// - https://github.com/hakimel/reveal.js#configuration
+// - https://github.com/hakimel/reveal.js#dependencies
+Reveal.initialize({
+  controls: false,
+  width: 1280,
+	height: 1024,
+  progress: true,
+  slideNumber: true,
+  history: true,
+  dependencies: [
+    { src: 'plugin/markdown/marked.js' },
+    { src: 'plugin/markdown/markdown.js' },
+    { src: 'plugin/notes/notes.js', async: true },
+    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+  ]
+});
+    </script>
+  </body>
+</html>
