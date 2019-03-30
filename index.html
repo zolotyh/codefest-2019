@@ -213,6 +213,7 @@ function _createClass(Constructor, protoProps, staticProps) {...}
               <img src="img/devtools2.png" alt="">
           </section>
           <section>
+              <p>Сжатие в потоке</p>
               <ul>
                   <li >gzip<sup>1</sup><b class="fragment">&mdash; 50&ndash;90% 🥩</b></li>
                   <li class="fragment">gzip<sup>9</sup>
@@ -288,6 +289,9 @@ function _createClass(Constructor, protoProps, staticProps) {...}
               <img src="img/chart.png" style="height: 5em" alt="">
           </section>
           <section>
+              <img src="img/halyava.jpeg" alt="">
+          </section>
+          <section>
               <p>Итого:</p>
               <ul>
                   <li class="fragment">Просто</li>
@@ -296,9 +300,6 @@ function _createClass(Constructor, protoProps, staticProps) {...}
                   <li class="fragment">Почти всегда стоит включить</li>
 
               </ul>
-          </section>
-          <section>
-              <img src="img/halyava.jpeg" alt="">
           </section>
           <section>
               <blockquote>
@@ -334,7 +335,7 @@ function _createClass(Constructor, protoProps, staticProps) {...}
               </table>
           </section>
           <section>
-              <p>Можно уменьшить еще?</p>
+              <p>Можем сжать?</p>
           </section>
           <section>
               UglifyJS
@@ -345,6 +346,19 @@ function _createClass(Constructor, protoProps, staticProps) {...}
 uglifyjs lodash.js &gt; lodash.min.js
               </code></pre>
           </section>
+          <section>
+              <table>
+                  <tr>
+                      <th>По сети</th>
+                      <th>В браузере</th>
+                  </tr>
+                  <tr>
+                      <td>35k</td>
+                      <td>144k</td>
+                  </tr>
+              </table>
+          </section>
+
           <section>
               <ul>
                   <li>Убрали пробелы</li>
@@ -428,19 +442,7 @@ console.log(1);
               warnings,
           </section>
           <section>
-              <table>
-                  <tr>
-                      <th>По сети</th>
-                      <th>В браузере</th>
-                  </tr>
-                  <tr>
-                      <td>35k</td>
-                      <td>144k</td>
-                  </tr>
-              </table>
-          </section>
-          <section>
-              Ещё?
+              Можем ещё?
           </section>
           <section>
               <pre><code data-trim data-noescape>
@@ -479,17 +481,7 @@ function n(i){
               </table>
           </section>
           <section>
-              <p>Никто так не делает</p>
-              <pre><code data-trim>
-&lt;!DOCTYPE html&gt;
-&lt;html lang=&quot;en&quot;&gt;
-&lt;head&gt;
-    &lt;script src=&quot;https://CDN/lodash.js&quot;&gt;&lt;/script&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-              </code></pre>
+              Как толстеет бандл?
           </section>
           <section data-transition="slide none">
               <pre><code data-trim data-noescape>
@@ -596,7 +588,26 @@ console.log(cube(x))
               </pre>
           </section>
           <section>
+              <p>
+              Мечта
+              </p>
+              <pre><code data-trim>
+function cube(x) {
+  return x * x * x;
+}
+
+console.log(cube(x))
+
+              </code></pre>
+          </section>
+          <section>
+              <p>Реальность</p>
+              <p style="font-size: .5em; font-weight: 100">
 !function(e){var r={};function t(n){if(r[n])return r[n].exports;var o=r[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,t),o.l=!0,o.exports}t.m=e,t.c=r,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:n})},t.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},t.p="",t(t.s=0)}([function(e,r,t){"use strict";t.r(r);var n;console.log((n=3)*n*n)}]);
+              </p>
+          </section>
+          <section>
+              Dry противоречит Treeshaking
           </section>
           <section>
               <p>module.js</p>
@@ -611,14 +622,109 @@ export function cube(x) {
               </code></pre>
           </section>
           <section>
-              Не работает в webpack3 + babel6
+              Иногда Treeshaking не работал в Webpack
           </section>
+          <section data-transition="slide none">
+              <pre><code data-trim style="max-height: 500px">
+...
+/* unused harmony export square */
+/* harmony export (immutable) */ __webpack_exports__["a"] = cube;
+function square(x) {
+  return x * x;
+}
+
+function cube(x) {
+  return x * x * x;
+}
+...
+              </code></pre>
+          </section>
+        <section data-transition="none slide">
+          <pre><code data-trim data-noescape style="max-height: 500px">
+...
+<mark>/* unused harmony export square */</mark>
+/* harmony export (immutable) */ __webpack_exports__["a"] = cube;
+function square(x) {
+  return x * x;
+}
+
+function cube(x) {
+  return x * x * x;
+}
+...
+          </code></pre>
+        </section>
           <section>
               <p>Статья на Хабре</p>
               <a href="https://habr.com/ru/company/wrike/blog/342686/">bit.do/treesh</a>
               <br>
               <img style="height: 5em" src="img/tree.png" alt="">
           </section>
+        <section>
+          <p>module.js</p>
+          <pre><code>
+export class MyClass {
+    print(){
+        console.log('find me');
+    }
+}
+          </code></pre>
+        </section>
+        <section data-transition="slide none">
+          <pre><code data-trim style="max-height: 600px">
+/* unused harmony export MyClass */
+var MyClass = function () {
+  function MyClass() {
+    babelHelpers.classCallCheck(this, MyClass);
+  }
+
+  MyClass.prototype.turn = function print() {
+    console.log('find me');
+  };
+
+  return MyClass;
+}();
+          </code></pre>
+        </section>
+        <section data-transition="none slide">
+          <pre><code data-noescape data-trim style="max-height: 600px">
+/* unused harmony export MyClass */
+<mark>var MyClass = function () {</mark>
+  function MyClass() {
+    babelHelpers.classCallCheck(this, MyClass);
+  }
+
+  MyClass.prototype.turn = function print() {
+    console.log('find me');
+  };
+
+  return MyClass;
+}();
+          </code></pre>
+        </section>
+        <section>
+          <p>
+            UglifyJS не понимает, что выкидывать
+          </p>
+        </section>
+                <section>
+          <pre><code data-trim data-noescape>
+...
+/* unused harmony export MyClass */
+var MyClass  =  <mark>/*#__PURE__*/</mark> function () {
+...
+          </code></pre>
+        </section>
+        <section>
+          <p>Как починить</p>
+          <ul>
+            <li class="fragment">Babel 7</li>
+            <li class="fragment">Webpack</li>
+          </ul>
+        </section>
+        <section>
+            Как нужно
+        </section>
           <section>
               <p>
 Код на Dart
@@ -761,13 +867,22 @@ latePeepholeOptimizations
 
           </section>
           <section>
+              <img src="img/gcc.png" alt="">
+          </section>
+          <section>
+              <img src="img/gcc2.png" alt="">
+          </section>
+          <section>
+              Сложности
+          </section>
+          <section>
               <pre><code class="bash" data-trim>
 java -jar compiler.jar \
   --compilation_level ADVANCED \
   --language_in=ES6 \
   --js lodash.js &gt; out.js
               </code></pre>
-              <p class="fragment">527k ⟹ 140k</p>
+              <p class="fragment">527k ⟹ 140k 💩</p>
           </section>
           <section>
               Нужны типы
@@ -791,7 +906,16 @@ var foo;
                TypeScript ⟹ Closure Translator
           </section>
           <section>
+              <p>Если все скомпилировалось в это, то</p>
               <pre><code data-trim>console.log("turn");</code></pre>
+          </section>
+          <section>
+              <p>Как будет работать здесь?</p>
+              <pre><code data-trim>
+&lt;script&gt;
+  var rudder = new Rudder();
+&lt;/script&gt;
+              </code></pre>
           </section>
           <section>
               <pre><code data-trim data-noescape>
@@ -807,7 +931,7 @@ displayId(car);</span>
               </code></pre>
           </section>
           <section>
-              <pre><code>
+              <pre><code data-trim>
 var a={};
 a.a="1234";
 alert(a.a);
@@ -834,15 +958,19 @@ x = 610;
           </section>
           <section>
               <p>Lodash?</p>
-              <p class="fragment">868k</p>
+              <p class="fragment">
+              💩
+              527k ⇒ 868k
+              💩
+              </p>
           </section>
           <section>
               <p>Выводы</p>
               <ul>
                   <li class="fragment">Потоковое сжатие</li>
-                  <li class="fragment">Сделать замеры</li>
                   <li class="fragment">Можно оставить как есть</li>
                   <li class="fragment">GCC не для библиотек</li>
+                  <li class="fragment">Искать другие варианты</li>
               </ul>
           </section>
           <section>
