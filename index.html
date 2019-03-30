@@ -609,7 +609,19 @@ console.log(cube(x))
           <section>
               Dry противоречит Treeshaking
           </section>
-          <section>
+          <section data-transition="slide none">
+              <p>module.js</p>
+              <pre><code data-trim>
+export function square(x) {
+  return x * x;
+}
+
+export function cube(x) {
+  return x * x * x;
+}
+              </code></pre>
+          </section>
+          <section data-transition="none slide">
               <p>module.js</p>
               <pre><code data-trim>
 export function square(x) {
@@ -623,6 +635,12 @@ export function cube(x) {
           </section>
           <section>
               Иногда Treeshaking не работал в Webpack
+          </section>
+          <section>
+              <p>Статья на Хабре</p>
+              <a href="https://habr.com/ru/company/wrike/blog/342686/">bit.do/treesh</a>
+              <br>
+              <img style="height: 5em" src="img/tree.png" alt="">
           </section>
           <section data-transition="slide none">
               <pre><code data-trim style="max-height: 500px">
@@ -654,12 +672,6 @@ function cube(x) {
 ...
           </code></pre>
         </section>
-          <section>
-              <p>Статья на Хабре</p>
-              <a href="https://habr.com/ru/company/wrike/blog/342686/">bit.do/treesh</a>
-              <br>
-              <img style="height: 5em" src="img/tree.png" alt="">
-          </section>
         <section>
           <p>module.js</p>
           <pre><code>
